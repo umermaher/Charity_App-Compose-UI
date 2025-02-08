@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Charity App</string>
+    <string name="choose_your_category">Choose your category</string>
+    <string name="medical">Medical</string>
+    <string name="donate">Donate</string>
+    <string name="food">Food</string>
+    <string name="lets_help_together">Let\'s help together</string>
+    <string name="in_this_pandemic">in this pandemic!</string>
+    <string name="choose_category_msg">You can get medical and food service at your doorsteps and also anyone can donate some fund for covid patients.</string>
+    <string name="select_plan_msg">Select your plan and enjoy a warm\nlunch or dinner at your home.</string>
+    <string name="view_details">View Details</string>
+    <string name="our_features">Our Features</string>
+    <string name="order_your_meal_online">Order your\nmeal online</string>
+    <string name="schedule_as_per_your_ease">Schedule as\nper your ease</string>
+    <string name="track_delivery">Track\nDelivery</string>
+    <string name="enjoy_a_warm_meal">Enjoy a\nwarm meal</string>
+</resources>
