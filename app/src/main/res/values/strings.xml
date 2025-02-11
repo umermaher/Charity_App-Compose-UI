@@ -14,4 +14,19 @@
     <string name="schedule_as_per_your_ease">Schedule as\nper your ease</string>
     <string name="track_delivery">Track\nDelivery</string>
     <string name="enjoy_a_warm_meal">Enjoy a\nwarm meal</string>
+    <string name="food_plan">Food Plan</string>
+    <string name="book_now">Book Now</string>
+    <string name="lunch">Lunch</string>
+    <string name="dinner">Dinner</string>
+    <string name="back">Back</string>
+    <string name="next">Next</string>
+    <string name="select_days">Select Days</string>
+    <string name="calendar">Calendar</string>
+    <string name="edit">Edit</string>
+    <string name="payment_type">Payment Type</string>
+    <string name="credit_card">Credit/Debit Card</string>
+    <string name="paypal">Paypal</string>
+    <string name="google_pay">Google Pay</string>
+    <string name="billing_details">Billing Details</string>
+    <string name="checkout">Checkout</string>
 </resources>

@@ -56,7 +56,14 @@ val AppTypography = Typography(
             )
         )
     ),
-    headlineMedium = baseline.headlineMedium.copy(fontFamily = displayFontFamily),
+    headlineMedium = baseline.headlineMedium.copy(
+        fontFamily = FontFamily(
+            Font(
+                resId = R.font.philosopher_bold,
+            )
+        ),
+        fontSize = 30.sp
+    ),
     headlineSmall = baseline.headlineSmall.copy(
         fontFamily = FontFamily(
             Font(
@@ -88,7 +95,14 @@ val AppTypography = Typography(
         ),
     ),
     bodyLarge = baseline.bodyLarge.copy(fontFamily = bodyFontFamily),
-    bodyMedium = baseline.bodyMedium.copy(fontFamily = bodyFontFamily),
+    bodyMedium = baseline.bodyMedium.copy(
+        fontFamily = FontFamily(
+            Font(
+                resId = R.font.poppins_medium,
+            )
+        ),
+        lineHeight = 20.sp
+    ),
     bodySmall = baseline.bodySmall.copy(fontFamily = bodyFontFamily),
     labelLarge = baseline.labelLarge.copy(fontFamily = bodyFontFamily),
     labelMedium = baseline.labelMedium.copy(fontFamily = bodyFontFamily),
