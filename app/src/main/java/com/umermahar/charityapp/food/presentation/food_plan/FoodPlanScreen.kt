@@ -1,5 +1,6 @@
 package com.umermahar.charityapp.food.presentation.food_plan
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -43,6 +44,7 @@ fun FoodPlanScreen(
     popBackStack: () -> Unit
 ) {
     LaunchedEffect(Unit) {
+        Log.d("FoodPlanScreen", "$meal")
         viewModel.setMeal(meal)
     }
 
