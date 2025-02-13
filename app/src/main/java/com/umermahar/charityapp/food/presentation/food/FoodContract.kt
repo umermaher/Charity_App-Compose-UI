@@ -21,6 +21,11 @@ data class FoodState(
             count = 3,
             pricePerDayUSD = 24f
         ),
+        Meal(
+            id = 4,
+            count = 4,
+            pricePerDayUSD = 30f
+        ),
     ),
     val features: List<FeatureItem> = getFeaturesItem()
 )

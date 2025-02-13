@@ -1,5 +1,10 @@
+@file:OptIn(ExperimentalSharedTransitionApi::class)
+
 package com.umermahar.charityapp.food.presentation.food
 
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -33,6 +38,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.umermahar.charityapp.MEAL_CARD_ANIMATION_BOUNDS_KEY
 import com.umermahar.charityapp.R
 import com.umermahar.charityapp.core.presentation.utils.compose.GeneralTopBar
 import com.umermahar.charityapp.food.presentation.food.components.FeatureCard
@@ -42,8 +48,9 @@ import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun FoodScreen(
+fun SharedTransitionScope.FoodScreen(
     viewModel: FoodViewModel = koinViewModel(),
+    animatedVisibilityScope: AnimatedVisibilityScope,
     navigate: (Any) -> Unit,
     popBackStack: () -> Unit
 ) {
@@ -60,13 +67,15 @@ fun FoodScreen(
 
     FoodScreenContent(
         state = state,
+        animatedVisibilityScope = animatedVisibilityScope,
         onAction = viewModel::onAction
     )
 }
 
 @Composable
-fun FoodScreenContent(
+fun SharedTransitionScope.FoodScreenContent(
     state: FoodState,
+    animatedVisibilityScope: AnimatedVisibilityScope,
     onAction: (FoodActions) -> Unit
 ) {
     Scaffold { pd ->
@@ -85,11 +94,6 @@ fun FoodScreenContent(
                             color = MaterialTheme.colorScheme.secondary,
                             shape = RoundedCornerShape(bottomStart = 30.dp)
                         )
-                )
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .background(color = Color.Red)
                 )
             }
 
@@ -157,6 +161,7 @@ fun FoodScreenContent(
                                 .padding(
                                     horizontal = 15.dp
                                 ),
+                            animatedVisibilityScope = animatedVisibilityScope,
                             meal = meal,
                             onClick = {
                                 onAction(FoodActions.OnMealClick(meal))
@@ -198,6 +203,6 @@ fun FoodScreenContent(
 @Composable
 fun FoodScreenPreview() {
     AppTheme {
-        FoodScreenContent(FoodState(), {})
+//        FoodScreenContent(FoodState(), {})
     }
 }

@@ -119,7 +119,8 @@ fun CalendarContentItem(
         if(date.dateRange == DateRange.START || date.dateRange == DateRange.END) {
             Row(
                 modifier = Modifier
-                    .size(36.dp)
+                    .height(36.dp)
+                    .fillMaxWidth()
             ) {
                 Box(
                     modifier = Modifier

@@ -112,7 +112,7 @@ fun ChooseCategoryScreenContent(
 
             ChooseCategory(
                 modifier = Modifier
-                    .height(233.dp)
+                    .height(240.dp)
                     .fillMaxWidth(),
                 onCategorySelected = {
                     onEvent(ChooseCategoryActions.OnCategorySelected(it))

@@ -2,7 +2,6 @@ package com.umermahar.charityapp.food.presentation.food_plan.components
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -15,16 +14,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
 import com.umermahar.charityapp.R
 import kotlinx.coroutines.delay
 
 @Composable
-fun ProceedAnimatedIcons() {
+fun ProceedAnimatedArrowIcons(
+    color: Color = Color.White
+) {
     val colors = listOf(
-        Color.White.copy(alpha = 0.2f), // First icon starts dim
-        Color.White.copy(alpha = 0.5f), // Second icon medium brightness
-        Color.White                      // Third icon fully white
+        color.copy(alpha = 0.2f), // First icon starts dim
+        color.copy(alpha = 0.5f), // Second icon medium brightness
+        color                      // Third icon fully white
     )
 
     var index by remember { mutableIntStateOf(0) }

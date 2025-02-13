@@ -1,6 +1,11 @@
+@file:OptIn(ExperimentalSharedTransitionApi::class)
+
 package com.umermahar.charityapp.food.presentation.food_plan
 
 import android.util.Log
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -26,6 +31,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.umermahar.charityapp.MEAL_CARD_ANIMATION_BOUNDS_KEY
+import com.umermahar.charityapp.PAY_NOW_EXPLODE_BOUNDS_KEY
 import com.umermahar.charityapp.R
 import com.umermahar.charityapp.core.presentation.utils.DateUtil
 import com.umermahar.charityapp.food.presentation.food.models.Meal
@@ -37,9 +44,10 @@ import com.umermahar.charityapp.ui.theme.AppTheme
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun FoodPlanScreen(
+fun SharedTransitionScope.FoodPlanScreen(
     viewModel: FoodPlanViewModel = koinViewModel(),
     meal: Meal,
+    animatedVisibilityScope: AnimatedVisibilityScope,
     navigate: (Any) -> Unit,
     popBackStack: () -> Unit
 ) {
@@ -48,7 +56,7 @@ fun FoodPlanScreen(
         viewModel.setMeal(meal)
     }
 
-    LaunchedEffect (Unit){
+    LaunchedEffect (Unit) {
         viewModel.event.collect { event ->
             when (event) {
                 FoodPlanEvent.PopBackStack -> popBackStack()
@@ -61,13 +69,15 @@ fun FoodPlanScreen(
 
     FoodPlanScreenContent(
         state = state,
-        onAction = viewModel::onAction
+        onAction = viewModel::onAction,
+        animatedVisibilityScope = animatedVisibilityScope
     )
 }
 
 @Composable
-fun FoodPlanScreenContent(
+fun SharedTransitionScope.FoodPlanScreenContent(
     state: FoodPlanState,
+    animatedVisibilityScope: AnimatedVisibilityScope,
     onAction: (FoodPlanActions) -> Unit
 ) {
     if(state.meal != null) {
@@ -80,7 +90,15 @@ fun FoodPlanScreenContent(
                     .padding(pd)
             ) {
                 FoodPlanHeader(
+                    modifier = Modifier
+                        .sharedBounds(
+                            sharedContentState = rememberSharedContentState(
+                                key = MEAL_CARD_ANIMATION_BOUNDS_KEY + state.meal.id
+                            ),
+                            animatedVisibilityScope = animatedVisibilityScope
+                        ),
                     meal = state.meal,
+                    animatedVisibilityScope = animatedVisibilityScope,
                     onAction = {}
                 )
 
@@ -181,15 +199,17 @@ fun FoodPlanScreenContent(
 @Composable
 fun FoodScreenPreview() {
     AppTheme {
-        FoodPlanScreenContent(
-            state = FoodPlanState(
-                meal = Meal(
-                    id = 1,
-                    count = 1,
-                    pricePerDayUSD = 1f
-                )
-            ),
-            onAction = {}
-        )
+//        SharedTransitionScope {
+//            FoodPlanScreenContent(
+//                state = FoodPlanState(
+//                    meal = Meal(
+//                        id = 1,
+//                        count = 1,
+//                        pricePerDayUSD = 1f
+//                    )
+//                ),
+//                onAction = {}
+//            )
+//        }
     }
 }

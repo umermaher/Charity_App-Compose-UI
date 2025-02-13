@@ -26,8 +26,7 @@ fun CategoryItem(
     modifier: Modifier
 ) {
     Column(
-        modifier = modifier
-            .clip(RoundedCornerShape(8.dp)),
+        modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(

@@ -1,5 +1,8 @@
 package com.umermahar.charityapp.food.presentation.food_plan.components
 
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
@@ -30,22 +33,27 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.umermahar.charityapp.MEAL_COUNT_ANIMATION_BOUNDS_KEY
 import com.umermahar.charityapp.R
 import com.umermahar.charityapp.core.presentation.utils.compose.GeneralTopBar
 import com.umermahar.charityapp.food.presentation.food.models.Meal
 import com.umermahar.charityapp.food.presentation.food_plan.FoodPlanActions
 import com.umermahar.charityapp.ui.theme.AppTheme
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun FoodPlanHeader(
+fun SharedTransitionScope.FoodPlanHeader(
     modifier: Modifier = Modifier,
+    animatedVisibilityScope: AnimatedVisibilityScope,
     meal: Meal,
     onAction: (FoodPlanActions) -> Unit
 ) {
     Card(
         modifier = modifier,
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primary
+            containerColor = if(meal.id % 2 == 0) {
+                MaterialTheme.colorScheme.primary
+            } else MaterialTheme.colorScheme.tertiary
         ),
         shape = RoundedCornerShape(
             bottomStart = 30.dp,
@@ -93,6 +101,13 @@ fun FoodPlanHeader(
                         verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
                     ) {
                         Text(
+                            modifier = Modifier
+                                .sharedBounds(
+                                    sharedContentState = rememberSharedContentState(
+                                        key = MEAL_COUNT_ANIMATION_BOUNDS_KEY + meal.id
+                                    ),
+                                    animatedVisibilityScope = animatedVisibilityScope
+                                ),
                             text = "${meal.count} Meal",
                             style = MaterialTheme.typography.headlineMedium,
                         )
@@ -127,17 +142,17 @@ fun FoodPlanHeader(
     }
 }
 
-@Preview
-@Composable
-fun FoodPlanHeaderPreview() {
-    AppTheme {
-        FoodPlanHeader(
-            meal = Meal(
-                id = 1,
-                count = 1,
-                pricePerDayUSD = 1f
-            ),
-            onAction = {}
-        )
-    }
-}
+//@Preview
+//@Composable
+//fun FoodPlanHeaderPreview() {
+//    AppTheme {
+//        FoodPlanHeader(
+//            meal = Meal(
+//                id = 1,
+//                count = 1,
+//                pricePerDayUSD = 1f
+//            ),
+//            onAction = {}
+//        )
+//    }
+//}

@@ -1,5 +1,10 @@
+@file:OptIn(ExperimentalSharedTransitionApi::class)
+
 package com.umermahar.charityapp.food.presentation.billing_details
 
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -11,15 +16,18 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,18 +35,22 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.umermahar.charityapp.PAY_NOW_EXPLODE_BOUNDS_KEY
 import com.umermahar.charityapp.R
 import com.umermahar.charityapp.core.presentation.utils.compose.GeneralTopBar
 import com.umermahar.charityapp.core.presentation.utils.compose.SwipableButton
+import com.umermahar.charityapp.food.presentation.billing_details.components.AddCardBottomSheet
 import com.umermahar.charityapp.food.presentation.billing_details.components.PaymentTypeCard
 import com.umermahar.charityapp.food.presentation.food.models.Meal
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun BillingDetailsScreen(
+fun SharedTransitionScope.BillingDetailsScreen(
     viewModel: BillingDetailsViewModel = koinViewModel(),
     meal: Meal,
+    animatedVisibilityScope: AnimatedVisibilityScope,
     navigate: (Any) -> Unit,
     popBackStack: () -> Unit
 ) {
@@ -60,15 +72,25 @@ fun BillingDetailsScreen(
 
     BillingDetailsContent(
         state = state,
-        onAction = viewModel::onAction
+        animatedVisibilityScope = animatedVisibilityScope,
+        onAction = viewModel::onAction,
+        onCardAction = viewModel::onAction
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BillingDetailsContent(
+fun SharedTransitionScope.BillingDetailsContent(
     state: BillingDetailsState,
-    onAction: (BillingDetailsActions) -> Unit
+    animatedVisibilityScope: AnimatedVisibilityScope,
+    onAction: (BillingDetailsActions) -> Unit,
+    onCardAction: (AddCardActions) -> Unit
 ) {
+    val sheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = true
+    )
+    val scope = rememberCoroutineScope()
+
     Scaffold {
         Column(
             modifier = Modifier
@@ -181,11 +203,17 @@ fun BillingDetailsContent(
                 ) {
                     SwipableButton(
                         modifier = Modifier
-                            .fillMaxWidth(),
+                            .fillMaxWidth()
+                            .sharedBounds(
+                                sharedContentState = rememberSharedContentState(
+                                    key = PAY_NOW_EXPLODE_BOUNDS_KEY
+                                ),
+                                animatedVisibilityScope = animatedVisibilityScope
+                            ),
                         price = "$${state.meal?.pricePerDayUSD?.toInt()}",
                         buttonText = stringResource(R.string.checkout),
                         onSwiped = {
-                            onAction(BillingDetailsActions.OnCheckoutSwiped)
+                            onAction(BillingDetailsActions.OnCheckoutButtonSwiped)
                         }
                     )
                 }
@@ -193,5 +221,24 @@ fun BillingDetailsContent(
                 Spacer(modifier = Modifier.height(30.dp))
             }
         }
+    }
+
+    if(state.shouldShowAddCardBottomSheet) {
+        AddCardBottomSheet(
+            sheetState = sheetState,
+            state = state.addCardState,
+            pricePerDayUSD = state.meal?.pricePerDayUSD ?: 0f,
+            onAction = { action ->
+                scope.launch {
+                    if(action is AddCardActions.OnPayNowButtonSwiped) {
+                        sheetState.hide()
+                    }
+                    onCardAction(action)
+                }
+            },
+            onDismissRequest = {
+                onAction(BillingDetailsActions.ToggleAddCardBottomSheet)
+            }
+        )
     }
 }

@@ -117,8 +117,9 @@ fun ChooseCategory(
                 icon = R.drawable.img_donate
             )
         }
-
     }
+
+
 }
 
 @Preview

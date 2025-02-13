@@ -1,5 +1,10 @@
+@file:OptIn(ExperimentalSharedTransitionApi::class)
+
 package com.umermahar.charityapp.food.presentation.food.components
 
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,18 +30,27 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.umermahar.charityapp.MEAL_CARD_ANIMATION_BOUNDS_KEY
+import com.umermahar.charityapp.MEAL_COUNT_ANIMATION_BOUNDS_KEY
 import com.umermahar.charityapp.R
 import com.umermahar.charityapp.food.presentation.food.models.Meal
 
 @Composable
-fun MealCard(
+fun SharedTransitionScope.MealCard(
     modifier: Modifier = Modifier,
+    animatedVisibilityScope: AnimatedVisibilityScope,
     meal: Meal,
     onClick: (Meal) -> Unit
 ) {
 
     Card(
-        modifier = modifier,
+        modifier = modifier
+            .sharedBounds(
+                sharedContentState = rememberSharedContentState(
+                    key = MEAL_CARD_ANIMATION_BOUNDS_KEY + meal.id
+                ),
+                animatedVisibilityScope = animatedVisibilityScope
+            ),
         colors = CardDefaults.cardColors(
             containerColor = if(meal.id % 2 == 0) {
                 MaterialTheme.colorScheme.primary
@@ -53,6 +67,13 @@ fun MealCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
+                    modifier = Modifier
+                        .sharedBounds(
+                            sharedContentState = rememberSharedContentState(
+                                key = MEAL_COUNT_ANIMATION_BOUNDS_KEY + meal.id
+                            ),
+                            animatedVisibilityScope = animatedVisibilityScope
+                        ),
                     text = "${meal.count} Meal",
                     style = MaterialTheme.typography.headlineSmall,
                 )
@@ -116,13 +137,13 @@ fun MealCard(
 
 @Preview
 @Composable
-fun MealCardPreview() {
-    MealCard(
-        meal = Meal(
-            id = 1,
-            count = 1,
-            pricePerDayUSD = 12f
-        ),
-        onClick = {}
-    )
+fun SharedTransitionScope.MealCardPreview() {
+//    MealCard(
+//        meal = Meal(
+//            id = 1,
+//            count = 1,
+//            pricePerDayUSD = 12f
+//        ),
+//        onClick = {}
+//    )
 }

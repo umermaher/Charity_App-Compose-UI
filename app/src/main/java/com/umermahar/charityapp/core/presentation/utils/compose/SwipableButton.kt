@@ -31,7 +31,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.umermahar.charityapp.R
-import com.umermahar.charityapp.food.presentation.food_plan.components.ProceedAnimatedIcons
+import com.umermahar.charityapp.food.presentation.food_plan.components.ProceedAnimatedArrowIcons
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -105,8 +105,8 @@ fun SwipableButton(
                                 buttonWidthFactor.snapTo(expansionFactor)
 
                                 if (buttonWidthFactor.value >= 1f) {
+                                    buttonWidthFactor.snapTo(0.66f) // ✅ Reset after completion
                                     onSwiped() // ✅ Trigger completion when fully expanded
-                                    buttonWidthFactor.animateTo(0.66f) // ✅ Reset after completion
                                 }
                             }
                         }
@@ -130,7 +130,7 @@ fun SwipableButton(
 
                 Spacer(modifier = Modifier.width(14.dp))
 
-                ProceedAnimatedIcons()
+                ProceedAnimatedArrowIcons()
             }
         }
     }

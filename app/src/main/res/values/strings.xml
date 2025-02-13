@@ -29,4 +29,14 @@
     <string name="google_pay">Google Pay</string>
     <string name="billing_details">Billing Details</string>
     <string name="checkout">Checkout</string>
+    <string name="name_on_card">Name on Card</string>
+    <string name="expiry_date">Expiry Date</string>
+    <string name="enter_name">Enter Name</string>
+    <string name="pay_now">Pay Now</string>
+    <string name="track_order">Track Order</string>
+    <string name="thank_you">Thank you</string>
+    <string name="for_your_order">for your order!</string>
+    <string name="glad_to_serve_message">We are glad to serve you\nwarm meal.</string>
+    <string name="card_number">Card Number</string>
+    <string name="cvv">CVV</string>
 </resources>
