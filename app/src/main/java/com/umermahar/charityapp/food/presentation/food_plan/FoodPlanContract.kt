@@ -1,6 +1,7 @@
 package com.umermahar.charityapp.food.presentation.food_plan
 
 import com.umermahar.charityapp.food.presentation.food.models.Meal
+import com.umermahar.charityapp.food.presentation.food_plan.components.date_range_calendar.model.DaySelected
 import java.time.YearMonth
 
 data class FoodPlanState(
@@ -105,6 +106,7 @@ sealed interface FoodPlanActions {
     data class OnNextMonthButtonClick(val yearMonth: YearMonth) : FoodPlanActions
     data class OnDateClick(val date: CalendarUiState.Date) : FoodPlanActions
     data object OnBookNowButtonSwiped : FoodPlanActions
+    data class OnDaySelected(val daySelected: DaySelected) : FoodPlanActions
 }
 
 sealed interface FoodPlanEvent {

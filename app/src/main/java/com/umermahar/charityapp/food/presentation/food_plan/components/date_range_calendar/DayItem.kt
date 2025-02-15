@@ -1,4 +1,4 @@
-package com.umermahar.charityapp.food.presentation.food_plan.components.calendar
+package com.umermahar.charityapp.food.presentation.food_plan.components.date_range_calendar
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding

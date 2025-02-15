@@ -1,5 +1,6 @@
-package com.umermahar.charityapp.food.presentation.food_plan.components.calendar
+package com.umermahar.charityapp.food.presentation.food_plan.components.date_range_calendar
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -7,12 +8,17 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
@@ -21,25 +27,27 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.umermahar.charityapp.R
-import com.umermahar.charityapp.core.presentation.utils.getDisplayName
-import java.time.YearMonth
-import java.time.format.TextStyle
-import java.util.Locale
+import com.umermahar.charityapp.food.presentation.food_plan.components.date_range_calendar.model.DaySelected
+import com.umermahar.charityapp.food.presentation.food_plan.components.date_range_calendar.model.DaySelectedEmpty
 
 @Composable
 fun CalendarHeader(
-    yearMonth: YearMonth,
-    startDayOfMonth: Int?,
-    endDayOfMonth: Int?,
-    onPreviousMonthButtonClicked: (YearMonth) -> Unit,
-    onNextMonthButtonClicked: (YearMonth) -> Unit,
+    pagerState: PagerState,
+    calendarYear: CalendarYear,
+    from: DaySelected,
+    to: DaySelected,
+    onPreviousMonthButtonClicked: () -> Unit,
+    onNextMonthButtonClicked: () -> Unit,
 ) {
 
-    val rangeText = remember(startDayOfMonth, endDayOfMonth) {
-        if(startDayOfMonth != null && endDayOfMonth != null) {
-            "${yearMonth.month.getDisplayName(TextStyle.SHORT, Locale.getDefault())} $startDayOfMonth" +
-                    " - ${yearMonth.month.getDisplayName(TextStyle.SHORT, Locale.getDefault())} $endDayOfMonth"
+    val rangeText = remember(from, to){
+        if(from != DaySelectedEmpty && to != DaySelectedEmpty) {
+            "${from.day} ${from.month.name.take(3)} - ${to.day} ${to.month.name.take(3)}"
         } else "-"
+    }
+
+    val monthName = remember(pagerState.currentPage) {
+        calendarYear[pagerState.currentPage].name
     }
 
     Row(
@@ -49,10 +57,9 @@ fun CalendarHeader(
     ) {
         IconButton(
             onClick = {
-                onPreviousMonthButtonClicked(
-                    yearMonth.minusMonths(1)
-                )
-            }
+                onPreviousMonthButtonClicked()
+            },
+            enabled = pagerState.currentPage > 0
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_back),
@@ -68,7 +75,7 @@ fun CalendarHeader(
         ) {
 
             Text(
-                text = yearMonth.getDisplayName(),
+                text = monthName,
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.titleMedium,
             )
@@ -85,10 +92,9 @@ fun CalendarHeader(
 
         IconButton(
             onClick = {
-                onNextMonthButtonClicked(
-                    yearMonth.plusMonths(1)
-                )
-            }
+                onNextMonthButtonClicked()
+            },
+            enabled = pagerState.currentPage < calendarYear.lastIndex
         ) {
             Icon(
                 modifier = Modifier

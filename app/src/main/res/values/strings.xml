@@ -39,4 +39,9 @@
     <string name="glad_to_serve_message">We are glad to serve you\nwarm meal.</string>
     <string name="card_number">Card Number</string>
     <string name="cvv">CVV</string>
+
+    <string name="cd_back">Back</string>
+    <string name="click_label_select">select</string>
+    <string name="state_descr_selected">Selected</string>
+    <string name="state_descr_not_selected">Not selected</string>
 </resources>

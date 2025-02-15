@@ -22,6 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -32,14 +33,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.umermahar.charityapp.MEAL_CARD_ANIMATION_BOUNDS_KEY
-import com.umermahar.charityapp.PAY_NOW_EXPLODE_BOUNDS_KEY
 import com.umermahar.charityapp.R
-import com.umermahar.charityapp.core.presentation.utils.DateUtil
 import com.umermahar.charityapp.food.presentation.food.models.Meal
 import com.umermahar.charityapp.food.presentation.food_plan.components.FoodPlanHeader
 import com.umermahar.charityapp.food.presentation.food_plan.components.MealTypeCard
 import com.umermahar.charityapp.core.presentation.utils.compose.SwipableButton
-import com.umermahar.charityapp.food.presentation.food_plan.components.calendar.CalendarWidget
+import com.umermahar.charityapp.food.presentation.food_plan.components.date_range_calendar.Calendar
+import com.umermahar.charityapp.food.presentation.food_plan.components.date_range_calendar.CalendarYear
+import com.umermahar.charityapp.food.presentation.food_plan.components.date_range_calendar.model.DatesSelectedState
+import com.umermahar.charityapp.food.presentation.food_plan.components.date_range_calendar.model.DaySelected
 import com.umermahar.charityapp.ui.theme.AppTheme
 import org.koin.androidx.compose.koinViewModel
 
@@ -69,6 +71,8 @@ fun SharedTransitionScope.FoodPlanScreen(
 
     FoodPlanScreenContent(
         state = state,
+        calendarYear = remember { viewModel.calendarYear },
+        datesSelectedState = viewModel.datesSelected,
         onAction = viewModel::onAction,
         animatedVisibilityScope = animatedVisibilityScope
     )
@@ -77,6 +81,8 @@ fun SharedTransitionScope.FoodPlanScreen(
 @Composable
 fun SharedTransitionScope.FoodPlanScreenContent(
     state: FoodPlanState,
+    calendarYear: CalendarYear,
+    datesSelectedState: DatesSelectedState,
     animatedVisibilityScope: AnimatedVisibilityScope,
     onAction: (FoodPlanActions) -> Unit
 ) {
@@ -127,22 +133,40 @@ fun SharedTransitionScope.FoodPlanScreenContent(
                         )
                     }
 
-                    CalendarWidget(
-                        days = DateUtil.daysOfWeek,
-                        calendarUiState = state.calendarUiState,
-                        onPreviousMonthButtonClicked = { prevMonth ->
+//                    CalendarWidget(
+//                        days = DateUtil.daysOfWeek,
+//                        calendarUiState = state.calendarUiState,
+//                        onPreviousMonthButtonClicked = { prevMonth ->
+//                            onAction(
+//                                FoodPlanActions.OnPreviousMonthButtonClick(prevMonth)
+//                            )
+//                        },
+//                        onNextMonthButtonClicked = { nextMonth ->
+//                            onAction(
+//                                FoodPlanActions.OnNextMonthButtonClick(nextMonth)
+//                            )
+//                        },
+//                        onDateClickListener = {
+//                            onAction(
+//                                FoodPlanActions.OnDateClick(it)
+//                            )
+//                        }
+//                    )
+                    Calendar(
+                        modifier = Modifier
+                            .weight(1f),
+                        calendarYear = calendarYear,
+                        from = datesSelectedState.from,
+                        to = datesSelectedState.to,
+                        onDayClicked = { day, month ->
                             onAction(
-                                FoodPlanActions.OnPreviousMonthButtonClick(prevMonth)
-                            )
-                        },
-                        onNextMonthButtonClicked = { nextMonth ->
-                            onAction(
-                                FoodPlanActions.OnNextMonthButtonClick(nextMonth)
-                            )
-                        },
-                        onDateClickListener = {
-                            onAction(
-                                FoodPlanActions.OnDateClick(it)
+                                FoodPlanActions.OnDaySelected(
+                                    DaySelected(
+                                        day = day.value,
+                                        month = month,
+                                        year = calendarYear
+                                    )
+                                )
                             )
                         }
                     )

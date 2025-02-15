@@ -6,6 +6,9 @@ import androidx.lifecycle.viewModelScope
 import com.umermahar.charityapp.BillingDetailScreen
 import com.umermahar.charityapp.core.presentation.utils.getDaysOfMonthStartingFromSundayToSaturday
 import com.umermahar.charityapp.food.presentation.food.models.Meal
+import com.umermahar.charityapp.food.presentation.food_plan.components.date_range_calendar.DatesUtils
+import com.umermahar.charityapp.food.presentation.food_plan.components.date_range_calendar.model.DatesSelectedState
+import com.umermahar.charityapp.food.presentation.food_plan.components.date_range_calendar.model.DaySelected
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,7 +19,7 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.YearMonth
 
-class FoodPlanViewModel: ViewModel() {
+class FoodPlanViewModel(): ViewModel() {
 
     private val _state = MutableStateFlow(FoodPlanState())
     val state = _state.asStateFlow()
@@ -25,6 +28,9 @@ class FoodPlanViewModel: ViewModel() {
     val event = eventChannel.receiveAsFlow()
 
     private val _swipeComplete = MutableStateFlow(false)
+
+    val calendarYear = DatesUtils.year
+    val datesSelected = DatesSelectedState(calendarYear)
 
     init {
         viewModelScope.launch {
@@ -74,6 +80,7 @@ class FoodPlanViewModel: ViewModel() {
             is FoodPlanActions.OnNextMonthButtonClick -> toNextMonth(action.yearMonth)
             is FoodPlanActions.OnPreviousMonthButtonClick -> toPreviousMonth(action.yearMonth)
             FoodPlanActions.OnBookNowButtonSwiped -> onSwipeComplete()
+            is FoodPlanActions.OnDaySelected -> onDaySelected(action.daySelected)
         }
     }
 
@@ -115,6 +122,10 @@ class FoodPlanViewModel: ViewModel() {
                 )
             )
         }
+    }
+
+    private fun onDaySelected(daySelected: DaySelected) {
+        datesSelected.daySelected(daySelected)
     }
 
     private fun getDates(yearMonth: YearMonth): List<CalendarUiState.Date> {
