@@ -152,8 +152,11 @@ class BillingDetailsViewModel: ViewModel() {
             }
             formattedText.append(firstYearDigit)
 
-            if (digitsOnly.length >= 4 && digitsOnly[3] >= '5') {
-                formattedText.append(digitsOnly[3]) // Append last digit of the year if valid
+            if (digitsOnly.length >= 4) {
+                val isThirdDigitValid = digitsOnly[2] != '2' || digitsOnly[3] >= '5'
+                if (isThirdDigitValid) {
+                    formattedText.append(digitsOnly[3])
+                }
             }
         }
 
